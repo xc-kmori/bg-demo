@@ -3,10 +3,8 @@
 User, Task, Categoryの関係を定義
 """
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-
-db = SQLAlchemy()
+from app.database import db
 
 
 class User(db.Model):

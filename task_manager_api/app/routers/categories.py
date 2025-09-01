@@ -15,7 +15,7 @@ categories_bp = Blueprint('categories', __name__)
 def get_categories():
     """カテゴリ一覧取得"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         categories = Category.query.filter_by(user_id=current_user_id).order_by(Category.name).all()
         
         return jsonify({
@@ -31,7 +31,7 @@ def get_categories():
 def create_category():
     """カテゴリ作成"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         data = request.get_json()
         
         if not data:
@@ -72,7 +72,7 @@ def create_category():
 def update_category(category_id):
     """カテゴリ更新"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         category = Category.query.filter_by(id=category_id, user_id=current_user_id).first()
         
         if not category:
@@ -112,7 +112,7 @@ def update_category(category_id):
 def delete_category(category_id):
     """カテゴリ削除"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         category = Category.query.filter_by(id=category_id, user_id=current_user_id).first()
         
         if not category:
@@ -138,7 +138,7 @@ def delete_category(category_id):
 def get_category_tasks(category_id):
     """特定カテゴリのタスク一覧"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         
         # カテゴリの存在確認
         category = Category.query.filter_by(id=category_id, user_id=current_user_id).first()

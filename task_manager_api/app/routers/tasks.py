@@ -7,6 +7,8 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models import Task, Category
 from app.database import db
+from app.utils.validators import TaskValidator, ValidationError
+from app.utils.decorators import combined_decorator, handle_errors
 
 tasks_bp = Blueprint('tasks', __name__)
 
@@ -16,7 +18,7 @@ tasks_bp = Blueprint('tasks', __name__)
 def get_tasks():
     """タスク一覧取得"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         
         # クエリパラメータ
         status = request.args.get('status')
@@ -47,54 +49,45 @@ def get_tasks():
 
 @tasks_bp.route('/', methods=['POST'])
 @jwt_required()
+@combined_decorator
 def create_task():
     """タスク作成"""
-    try:
-        current_user_id = get_jwt_identity()
-        data = request.get_json()
-        
-        if not data:
-            return jsonify({'error': 'JSONデータが必要です'}), 400
-            
-        title = data.get('title')
-        if not title:
-            return jsonify({'error': 'タスクタイトルは必須項目です'}), 400
-            
-        # カテゴリの存在確認
-        category_id = data.get('category_id')
-        if category_id:
-            category = Category.query.filter_by(id=category_id, user_id=current_user_id).first()
-            if not category:
-                return jsonify({'error': '指定されたカテゴリが見つかりません'}), 404
-        
-        # 新規タスク作成
-        task = Task(
-            title=title,
-            description=data.get('description', ''),
-            priority=data.get('priority', 'medium'),
-            user_id=current_user_id,
-            category_id=category_id
-        )
-        
-        # 期限日の設定
-        due_date_str = data.get('due_date')
-        if due_date_str:
-            try:
-                task.due_date = datetime.fromisoformat(due_date_str.replace('Z', '+00:00'))
-            except ValueError:
-                return jsonify({'error': '期限日の形式が正しくありません'}), 400
-        
-        db.session.add(task)
-        db.session.commit()
-        
-        return jsonify({
-            'message': 'タスクを作成しました',
-            'task': task.to_dict()
-        }), 201
-        
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'error': f'タスク作成でエラーが発生しました: {str(e)}'}), 500
+    current_user_id = int(get_jwt_identity())
+    data = request.get_json()
+    
+    # バリデーション実行
+    validated_data = TaskValidator.validate_task_data(data)
+    title = validated_data['title']
+    
+    # カテゴリの存在確認
+    category_id = data.get('category_id')
+    if category_id:
+        category = Category.query.filter_by(id=category_id, user_id=current_user_id).first()
+        if not category:
+            return jsonify({'error': '指定されたカテゴリが見つかりません'}), 404
+    
+    # 新規タスク作成
+    task = Task(
+        title=title,
+        description=data.get('description', ''),
+        priority=data.get('priority', 'medium'),
+        status=data.get('status', 'pending'),
+        user_id=current_user_id,
+        category_id=category_id
+    )
+    
+    # 期限日の設定
+    due_date_str = data.get('due_date')
+    if due_date_str:
+        task.due_date = datetime.fromisoformat(due_date_str.replace('Z', '+00:00'))
+    
+    db.session.add(task)
+    db.session.commit()
+    
+    return jsonify({
+        'message': 'タスクを作成しました',
+        'task': task.to_dict()
+    }), 201
 
 
 @tasks_bp.route('/<int:task_id>', methods=['GET'])
@@ -102,7 +95,7 @@ def create_task():
 def get_task(task_id):
     """特定のタスク取得"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         task = Task.query.filter_by(id=task_id, user_id=current_user_id).first()
         
         if not task:
@@ -119,7 +112,7 @@ def get_task(task_id):
 def update_task(task_id):
     """タスク更新"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         task = Task.query.filter_by(id=task_id, user_id=current_user_id).first()
         
         if not task:
@@ -177,7 +170,7 @@ def update_task(task_id):
 def delete_task(task_id):
     """タスク削除"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         task = Task.query.filter_by(id=task_id, user_id=current_user_id).first()
         
         if not task:
@@ -198,7 +191,7 @@ def delete_task(task_id):
 def get_task_stats():
     """タスク統計情報"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         
         total_tasks = Task.query.filter_by(user_id=current_user_id).count()
         pending_tasks = Task.query.filter_by(user_id=current_user_id, status='pending').count()

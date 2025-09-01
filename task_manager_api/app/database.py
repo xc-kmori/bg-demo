@@ -12,6 +12,9 @@ def init_database(app):
     """データベースを初期化"""
     db.init_app(app)
     
+    # モデルのインポート（テーブル作成前に必要）
+    from app.models import User, Task, Category
+    
     with app.app_context():
         # テーブル作成
         db.create_all()
