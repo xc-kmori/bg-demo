@@ -4,6 +4,7 @@ Flaskアプリケーションファクトリ
 """
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from app.config import config
 from app.database import db, init_database
 
@@ -17,6 +18,9 @@ def create_app(config_name='development'):
     
     # JWT設定
     jwt = JWTManager(app)
+    
+    # CORS設定（フロントエンドからのアクセスを許可）
+    CORS(app, origins=["http://localhost:8080", "http://127.0.0.1:8080", "file://"])
     
     # データベース初期化
     init_database(app)

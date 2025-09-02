@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - タスク管理アプリ</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- ログイン画面 -->
+        <div id="auth-screen" class="screen active">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h1><i class="fas fa-tasks"></i> Task Manager</h1>
+                    <p>効率的なタスク管理を始めましょう</p>
+                </div>
+                
+                <div class="auth-tabs">
+                    <button class="tab-btn active" onclick="showLogin()">ログイン</button>
+                    <button class="tab-btn" onclick="showRegister()">新規登録</button>
+                </div>
+                
+                <!-- ログインフォーム -->
+                <div id="login-form" class="auth-form active">
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label for="login-username">ユーザー名</label>
+                            <input type="text" id="login-username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">パスワード</label>
+                            <input type="password" id="login-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="login-btn">
+                            <i class="fas fa-sign-in-alt"></i> ログイン
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- 登録フォーム -->
+                <div id="register-form" class="auth-form">
+                    <form onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label for="register-username">ユーザー名</label>
+                            <input type="text" id="register-username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">メールアドレス</label>
+                            <input type="email" id="register-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">パスワード</label>
+                            <input type="password" id="register-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="register-btn">
+                            <i class="fas fa-user-plus"></i> 新規登録
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- メイン画面 -->
+        <div id="main-screen" class="screen">
+            <!-- ヘッダー -->
+            <header class="header">
+                <div class="header-left">
+                    <h1><i class="fas fa-tasks"></i> Task Manager</h1>
+                </div>
+                <div class="header-right">
+                    <div class="theme-toggle">
+                        <button onclick="toggleTheme()" id="theme-btn">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                    <div class="user-menu">
+                        <span id="user-name">ユーザー</span>
+                        <button onclick="logout()" class="btn btn-outline">
+                            <i class="fas fa-sign-out-alt"></i> ログアウト
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- サイドバー -->
+            <aside class="sidebar">
+                <nav class="nav">
+                    <a href="#" class="nav-item active" data-view="dashboard">
+                        <i class="fas fa-chart-pie"></i> ダッシュボード
+                    </a>
+                    <a href="#" class="nav-item" data-view="tasks">
+                        <i class="fas fa-list-check"></i> タスク一覧
+                    </a>
+                    <a href="#" class="nav-item" data-view="categories">
+                        <i class="fas fa-tags"></i> カテゴリ管理
+                    </a>
+                </nav>
+                
+                <div class="sidebar-footer">
+                    <button class="btn btn-primary btn-block" onclick="showCreateTaskModal()">
+                        <i class="fas fa-plus"></i> 新しいタスク
+                    </button>
+                </div>
+            </aside>
+            
+            <!-- メインコンテンツ -->
+            <main class="main-content">
+                <!-- ダッシュボード -->
+                <div id="dashboard-view" class="view active">
+                    <div class="view-header">
+                        <h2>ダッシュボード</h2>
+                    </div>
+                    
+                    <!-- 統計カード -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="total-tasks">0</h3>
+                                <p>総タスク数</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="pending-tasks">0</h3>
+                                <p>未完了</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="completed-tasks">0</h3>
+                                <p>完了済み</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="completion-rate">0%</h3>
+                                <p>完了率</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 最近のタスク -->
+                    <div class="recent-tasks">
+                        <h3>最近のタスク</h3>
+                        <div id="recent-tasks-list" class="task-list">
+                            <!-- 動的に生成される -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- タスク一覧 -->
+                <div id="tasks-view" class="view">
+                    <div class="view-header">
+                        <h2>タスク一覧</h2>
+                        <div class="view-actions">
+                            <div class="filters">
+                                <select id="status-filter" onchange="filterTasks()">
+                                    <option value="">すべてのステータス</option>
+                                    <option value="pending">未完了</option>
+                                    <option value="in_progress">進行中</option>
+                                    <option value="completed">完了済み</option>
+                                    <option value="cancelled">キャンセル</option>
+                                </select>
+                                <select id="priority-filter" onchange="filterTasks()">
+                                    <option value="">すべての優先度</option>
+                                    <option value="low">低</option>
+                                    <option value="medium">中</option>
+                                    <option value="high">高</option>
+                                    <option value="urgent">緊急</option>
+                                </select>
+                                <select id="category-filter" onchange="filterTasks()">
+                                    <option value="">すべてのカテゴリ</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="showCreateTaskModal()">
+                                <i class="fas fa-plus"></i> 新規作成
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="tasks-list" class="task-grid">
+                        <!-- 動的に生成される -->
+                    </div>
+                </div>
+                
+                <!-- カテゴリ管理 -->
+                <div id="categories-view" class="view">
+                    <div class="view-header">
+                        <h2>カテゴリ管理</h2>
+                        <button class="btn btn-primary" onclick="showCreateCategoryModal()">
+                            <i class="fas fa-plus"></i> 新規作成
+                        </button>
+                    </div>
+                    
+                    <div id="categories-list" class="categories-grid">
+                        <!-- 動的に生成される -->
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <!-- モーダル: タスク作成/編集 -->
+        <div id="task-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="task-modal-title">新しいタスク</h3>
+                    <button class="modal-close" onclick="closeTaskModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="task-form" onsubmit="handleTaskSubmit(event)">
+                    <div class="form-group">
+                        <label for="task-title">タイトル *</label>
+                        <input type="text" id="task-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-description">説明</label>
+                        <textarea id="task-description" rows="3"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-priority">優先度</label>
+                            <select id="task-priority">
+                                <option value="low">低</option>
+                                <option value="medium" selected>中</option>
+                                <option value="high">高</option>
+                                <option value="urgent">緊急</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-status">ステータス</label>
+                            <select id="task-status">
+                                <option value="pending" selected>未完了</option>
+                                <option value="in_progress">進行中</option>
+                                <option value="completed">完了済み</option>
+                                <option value="cancelled">キャンセル</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-category">カテゴリ</label>
+                            <select id="task-category">
+                                <option value="">カテゴリなし</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-due-date">期限日</label>
+                            <input type="datetime-local" id="task-due-date">
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-outline" onclick="closeTaskModal()">
+                            キャンセル
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="task-submit-btn">
+                            <i class="fas fa-save"></i> 保存
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- モーダル: カテゴリ作成/編集 -->
+        <div id="category-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="category-modal-title">新しいカテゴリ</h3>
+                    <button class="modal-close" onclick="closeCategoryModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="category-form" onsubmit="handleCategorySubmit(event)">
+                    <div class="form-group">
+                        <label for="category-name">カテゴリ名 *</label>
+                        <input type="text" id="category-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category-description">説明</label>
+                        <textarea id="category-description" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="category-color">カラー</label>
+                        <div class="color-picker">
+                            <input type="color" id="category-color" value="#007bff">
+                            <span id="color-preview"></span>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-outline" onclick="closeCategoryModal()">
+                            キャンセル
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="category-submit-btn">
+                            <i class="fas fa-save"></i> 保存
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- ローディング -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>読み込み中...</p>
+        </div>
+        
+        <!-- トースト通知 -->
+        <div id="toast-container" class="toast-container"></div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
