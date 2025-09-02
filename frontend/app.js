@@ -669,6 +669,13 @@ function switchView(viewName) {
     } else if (viewName === 'tasks') {
         Tasks.loadTasks();
         Categories.loadCategories();
+        // フィルター初期化
+        updateClearButtonVisibility();
+        updateActiveFilters({
+            status: document.getElementById('status-filter').value,
+            priority: document.getElementById('priority-filter').value,
+            category_id: document.getElementById('category-filter').value
+        });
     } else if (viewName === 'categories') {
         Categories.loadCategories();
     }
@@ -683,6 +690,108 @@ function filterTasks() {
     };
     
     Tasks.loadTasks(filters);
+    updateActiveFilters(filters);
+    updateClearButtonVisibility();
+}
+
+function updateActiveFilters(filters) {
+    const container = document.getElementById('active-filters');
+    const activeFilters = [];
+    
+    // ステータスフィルター
+    if (filters.status) {
+        const statusText = Utils.getStatusText(filters.status);
+        activeFilters.push({
+            type: 'status',
+            value: filters.status,
+            label: `ステータス: ${statusText}`,
+            icon: 'fas fa-circle-check'
+        });
+    }
+    
+    // 優先度フィルター
+    if (filters.priority) {
+        const priorityText = Utils.getPriorityText(filters.priority);
+        activeFilters.push({
+            type: 'priority',
+            value: filters.priority,
+            label: `優先度: ${priorityText}`,
+            icon: 'fas fa-exclamation'
+        });
+    }
+    
+    // カテゴリフィルター
+    if (filters.category_id) {
+        const category = AppState.categories.find(c => c.id == filters.category_id);
+        const categoryName = category ? category.name : 'カテゴリ';
+        activeFilters.push({
+            type: 'category',
+            value: filters.category_id,
+            label: `カテゴリ: ${categoryName}`,
+            icon: 'fas fa-tag'
+        });
+    }
+    
+    if (activeFilters.length === 0) {
+        container.style.display = 'none';
+        return;
+    }
+    
+    container.style.display = 'flex';
+    container.innerHTML = activeFilters.map(filter => `
+        <div class="active-filter-tag">
+            <i class="${filter.icon}"></i>
+            <span>${filter.label}</span>
+            <button class="remove-filter" onclick="removeFilter('${filter.type}')" title="フィルターを削除">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `).join('');
+}
+
+function removeFilter(filterType) {
+    const filterElementMap = {
+        status: 'status-filter',
+        priority: 'priority-filter',
+        category: 'category-filter'
+    };
+    
+    const elementId = filterElementMap[filterType];
+    if (elementId) {
+        document.getElementById(elementId).value = '';
+        filterTasks();
+    }
+}
+
+function clearAllFilters() {
+    document.getElementById('status-filter').value = '';
+    document.getElementById('priority-filter').value = '';
+    document.getElementById('category-filter').value = '';
+    filterTasks();
+}
+
+function updateClearButtonVisibility() {
+    const hasActiveFilters = 
+        document.getElementById('status-filter').value ||
+        document.getElementById('priority-filter').value ||
+        document.getElementById('category-filter').value;
+        
+    const clearBtn = document.getElementById('clear-filters-btn');
+    clearBtn.style.display = hasActiveFilters ? 'flex' : 'none';
+}
+
+function toggleFilterCollapse() {
+    const content = document.getElementById('filter-content');
+    const toggleBtn = document.getElementById('filter-toggle-btn');
+    const isCollapsed = content.classList.contains('collapsed');
+    
+    if (isCollapsed) {
+        content.classList.remove('collapsed');
+        toggleBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
+    } else {
+        content.classList.add('collapsed');
+        toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
+    }
 }
 
 // === モーダル管理 ===
@@ -816,6 +925,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('category-color').addEventListener('input', (e) => {
         document.getElementById('color-preview').style.backgroundColor = e.target.value;
     });
+    
+    // フィルターヘッダークリックイベント
+    const filterHeader = document.querySelector('.filter-header');
+    if (filterHeader) {
+        filterHeader.addEventListener('click', (e) => {
+            // コントロールボタンをクリックした場合は無視
+            if (!e.target.closest('.filter-controls')) {
+                toggleFilterCollapse();
+            }
+        });
+    }
     
     // 認証状態チェック
     Auth.checkAuthentication();
