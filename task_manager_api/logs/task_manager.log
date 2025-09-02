@@ -62,3 +62,5 @@
 2025-09-01 12:45:46,864 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
 2025-09-01 12:45:46,865 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
 2025-09-01 12:45:46,867 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-02 01:37:12,193 - task_manager - INFO - API Request: POST auth.register
+2025-09-02 01:37:13,849 - task_manager - INFO - API Request: POST auth.login
