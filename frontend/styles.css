@@ -259,6 +259,152 @@ body {
     gap: 1rem;
 }
 
+/* === フィルターセクション === */
+.filter-section {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(90deg, var(--bg-color), var(--surface-color));
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.filter-header:hover {
+    background: var(--bg-color);
+}
+
+.filter-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.filter-title i {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-content {
+    padding: 1.5rem;
+    transition: var(--transition);
+}
+
+.filter-content.collapsed {
+    display: none;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: var(--text-color);
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+
+.filter-label i {
+    color: var(--primary-color);
+    font-size: 0.875rem;
+    width: 16px;
+}
+
+.filter-group select {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--surface-color);
+    color: var(--text-color);
+    font-size: 0.875rem;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.filter-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.filter-group select:hover {
+    border-color: var(--primary-color);
+}
+
+/* アクティブなフィルター表示 */
+.active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.active-filter-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    animation: slideInDown 0.3s ease-out;
+}
+
+.active-filter-tag .remove-filter {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 0.75rem;
+    padding: 0;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.active-filter-tag .remove-filter:hover {
+    opacity: 1;
+}
+
+.btn-sm {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+}
+
 .filters {
     display: flex;
     gap: 0.5rem;
@@ -745,6 +891,17 @@ body {
     to { transform: rotate(360deg); }
 }
 
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* === レスポンシブデザイン === */
 @media (max-width: 768px) {
     .sidebar {
@@ -792,6 +949,18 @@ body {
     
     .filters {
         flex-direction: column;
+    }
+    
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .filter-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .filter-content {
+        padding: 1rem;
     }
 }
 

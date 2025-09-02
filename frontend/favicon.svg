@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- 背景 -->
+  <rect x="2" y="2" width="28" height="28" rx="4" fill="#007bff" stroke="#0056b3" stroke-width="1"/>
+  
+  <!-- チェックリスト線 -->
+  <rect x="9" y="8" width="14" height="1.5" rx="0.75" fill="white" opacity="0.9"/>
+  <rect x="9" y="13" width="11" height="1.5" rx="0.75" fill="white" opacity="0.9"/>
+  <rect x="9" y="18" width="13" height="1.5" rx="0.75" fill="white" opacity="0.9"/>
+  <rect x="9" y="23" width="9" height="1.5" rx="0.75" fill="white" opacity="0.9"/>
+  
+  <!-- チェックボックス -->
+  <rect x="5" y="6.5" width="3" height="3" rx="0.5" fill="white" opacity="0.9"/>
+  <rect x="5" y="11.5" width="3" height="3" rx="0.5" fill="white" opacity="0.9"/>
+  <rect x="5" y="16.5" width="3" height="3" rx="0.5" fill="white" opacity="0.9"/>
+  <rect x="5" y="21.5" width="3" height="3" rx="0.5" fill="white" opacity="0.9"/>
+  
+  <!-- チェックマーク（最初のタスクは完了） -->
+  <path d="M 5.8 8.5 L 6.5 9.2 L 7.5 7.8" stroke="#007bff" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+  
+  <!-- チェックマーク（3番目のタスクも完了） -->
+  <path d="M 5.8 18.5 L 6.5 19.2 L 7.5 17.8" stroke="#007bff" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+</svg>
