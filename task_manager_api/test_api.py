@@ -6,7 +6,7 @@ import requests
 import json
 from datetime import datetime, timedelta
 
-BASE_URL = "http://localhost:5000"
+BASE_URL = "http://localhost:5001"
 
 def test_health_check():
     """ヘルスチェック"""

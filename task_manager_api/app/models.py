@@ -24,7 +24,7 @@ class User(db.Model):
 
     def set_password(self, password):
         """パスワードをハッシュ化して保存"""
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = generate_password_hash(password, method='pbkdf2:sha256')
 
     def check_password(self, password):
         """パスワードをチェック"""
