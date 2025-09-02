@@ -1,0 +1,64 @@
+2025-09-01 12:45:41,986 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:42,118 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:42,180 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:42,250 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:42,250 - task_manager - ERROR - API Error: auth.register - Validation error: ユーザー名は必須項目です
+2025-09-01 12:45:42,250 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:42,250 - task_manager - ERROR - API Error: auth.register - Validation error: パスワードは必須項目です
+2025-09-01 12:45:42,319 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:42,380 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:42,511 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:42,513 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:42,574 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:42,704 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:42,764 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:42,894 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:42,955 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:43,087 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:43,148 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:43,276 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:43,337 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:43,469 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:43,532 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:43,670 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:43,731 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:43,865 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:43,926 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:44,062 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:44,124 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:44,188 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:44,266 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:44,327 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:44,390 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:44,393 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:45,360 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:45,422 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:45,495 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:45,568 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:45,632 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:45,692 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:45,692 - task_manager - ERROR - API Error: tasks.create_task - Validation error: タスクタイトルは必須項目です
+2025-09-01 12:45:45,760 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:45,822 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:45,952 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:46,014 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:46,074 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:46,077 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:46,078 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:46,150 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:46,210 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:46,270 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:46,273 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:46,274 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:46,345 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:46,406 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:46,466 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:46,546 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:46,608 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:46,668 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:46,740 - task_manager - INFO - API Request: POST auth.register
+2025-09-01 12:45:46,802 - task_manager - INFO - API Request: POST auth.login
+2025-09-01 12:45:46,862 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:46,864 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:46,865 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
+2025-09-01 12:45:46,867 - task_manager - INFO - API Request: POST tasks.create_task (User: 2)
