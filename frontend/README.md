@@ -57,7 +57,7 @@ pip install -r requirements.txt
 python run.py
 ```
 
-APIサーバーは `http://localhost:5000` で動作します。
+APIサーバーは `http://localhost:5001` で動作します。
 
 ### 2. フロントエンドの実行
 
@@ -145,7 +145,7 @@ frontend/
 
 ### ログインできない場合
 
-1. バックエンドAPIが起動しているか確認 (`http://localhost:5000/health`)
+1. バックエンドAPIが起動しているか確認 (`http://localhost:5001/health`)
 2. ブラウザの開発者ツールでネットワークエラーを確認
 3. CORS設定が正しいか確認
 

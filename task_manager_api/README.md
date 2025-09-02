@@ -60,7 +60,7 @@ cd task_manager_api
 python run.py
 ```
 
-サーバーは `http://localhost:5000` で起動します。
+サーバーは `http://localhost:5001` で起動します。
 
 ## 📚 API仕様
 

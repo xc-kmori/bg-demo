@@ -5,7 +5,7 @@
 
 // === 設定 ===
 const CONFIG = {
-    API_BASE_URL: 'http://localhost:5000/api',
+    API_BASE_URL: 'http://localhost:5001/api',
     TOKEN_KEY: 'task_manager_token',
     REFRESH_TOKEN_KEY: 'task_manager_refresh_token',
     USER_KEY: 'task_manager_user'

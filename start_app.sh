@@ -11,7 +11,7 @@ cd task_manager_api
 # 仮想環境がない場合は作成
 if [ ! -d "task_manager_env" ]; then
     echo "🔧 仮想環境を作成中..."
-    python -m venv task_manager_env
+    python3 -m venv task_manager_env
 fi
 
 # 仮想環境の有効化
@@ -24,7 +24,7 @@ pip install -r requirements.txt
 # データベースの初期化（存在しない場合）
 if [ ! -f "instance/task_manager.db" ]; then
     echo "🗄️ データベースを初期化中..."
-    python -c "
+    python3 -c "
 from app.app import create_app
 from app.database import db
 
@@ -36,8 +36,8 @@ with app.app_context():
 fi
 
 # バックエンドを背景で起動
-echo "🔥 バックエンドAPIを起動中（http://localhost:5000）..."
-python run.py &
+echo "🔥 バックエンドAPIを起動中（http://localhost:5001）..."
+python3 run.py &
 BACKEND_PID=$!
 
 # 少し待ってAPIの起動を確認
@@ -45,7 +45,7 @@ sleep 3
 
 # ヘルスチェック
 echo "🔍 APIヘルスチェック中..."
-if curl -s http://localhost:5000/health > /dev/null; then
+if curl -s http://localhost:5001/health > /dev/null; then
     echo "✅ バックエンドAPIが正常に起動しました"
 else
     echo "❌ バックエンドAPIの起動に失敗しました"
@@ -59,15 +59,15 @@ cd ../frontend
 
 # Python HTTPサーバーでフロントエンドを起動
 echo "🌐 フロントエンドサーバーを起動中（http://localhost:8080）..."
-python -m http.server 8080 &
+python3 -m http.server 8080 &
 FRONTEND_PID=$!
 
 echo ""
 echo "🎉 アプリケーションが起動しました！"
 echo ""
 echo "📱 フロントエンド: http://localhost:8080"
-echo "📡 バックエンドAPI: http://localhost:5000"
-echo "📚 API仕様書: http://localhost:5000/health"
+echo "📡 バックエンドAPI: http://localhost:5001"
+echo "📚 API仕様書: http://localhost:5001/health"
 echo ""
 echo "終了するには Ctrl+C を押してください"
 echo ""
