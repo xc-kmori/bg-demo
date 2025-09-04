@@ -144,8 +144,11 @@ class APIClient {
             const data = await response.json();
             
             if (!response.ok) {
-                // トークンエラーの場合、ログアウト
-                if (response.status === 401 || response.status === 422) {
+                // ログインAPIの場合は、セッション期限切れの処理をスキップ
+                const isLoginAPI = endpoint.includes('/auth/login');
+                
+                // トークンエラーの場合、ログアウト（ログインAPI以外）
+                if ((response.status === 401 || response.status === 422) && !isLoginAPI) {
                     AppState.clearCurrentUser();
                     Auth.showAuthScreen();
                     Utils.showToast('セッションが期限切れです。再度ログインしてください。', 'error');
