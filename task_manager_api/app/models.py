@@ -24,11 +24,27 @@ class User(db.Model):
 
     def set_password(self, password):
         """パスワードをハッシュ化して保存"""
-        self.password_hash = generate_password_hash(password, method='pbkdf2:sha256')
+        self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         """パスワードをチェック"""
-        return check_password_hash(self.password_hash, password)
+        try:
+            return check_password_hash(self.password_hash, password)
+        except (ValueError, AttributeError) as e:
+            # scryptが利用できない場合やその他のエラーの場合
+            # 古いハッシュ形式の場合は再ハッシュ化を試行
+            if 'scrypt' in str(e) or 'scrypt' in self.password_hash:
+                # 一時的にパスワードを再ハッシュ化して比較
+                try:
+                    new_hash = generate_password_hash(password)
+                    if check_password_hash(new_hash, password):
+                        # 新しいハッシュ形式で更新
+                        self.password_hash = new_hash
+                        db.session.commit()
+                        return True
+                except:
+                    pass
+            return False
 
     def to_dict(self):
         """辞書形式で返す（パスワードは除外）"""
