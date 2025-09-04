@@ -849,6 +849,25 @@ body {
     border-left: 4px solid var(--warning-color);
 }
 
+.toast-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.toast-main {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.toast-details {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    white-space: pre-line;
+}
+
 .toast-close {
     background: none;
     border: none;
@@ -856,6 +875,7 @@ body {
     cursor: pointer;
     font-size: 1.1rem;
     margin-left: auto;
+    align-self: flex-start;
 }
 
 /* === アニメーション === */
