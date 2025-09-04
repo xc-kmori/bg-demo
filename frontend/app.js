@@ -96,9 +96,17 @@ const Utils = {
                     type === 'error' ? 'exclamation-triangle' : 
                     'info-circle';
         
+        // メッセージに改行が含まれている場合は分割して表示
+        const messageLines = message.split('\n').filter(line => line.trim());
+        const mainMessage = messageLines[0];
+        const detailMessage = messageLines.slice(1).join('\n');
+        
         toast.innerHTML = `
             <i class="fas fa-${icon}"></i>
-            <span>${message}</span>
+            <div class="toast-content">
+                <div class="toast-main">${mainMessage}</div>
+                ${detailMessage ? `<div class="toast-details">${detailMessage}</div>` : ''}
+            </div>
             <button class="toast-close" onclick="this.parentElement.remove()">
                 <i class="fas fa-times"></i>
             </button>
@@ -106,12 +114,13 @@ const Utils = {
         
         container.appendChild(toast);
         
-        // 5秒後に自動削除
+        // エラーメッセージは8秒、その他は5秒で削除
+        const timeout = type === 'error' ? 8000 : 5000;
         setTimeout(() => {
             if (toast.parentElement) {
                 toast.remove();
             }
-        }, 5000);
+        }, timeout);
     }
 };
 
@@ -142,7 +151,11 @@ class APIClient {
                     Utils.showToast('セッションが期限切れです。再度ログインしてください。', 'error');
                     return null;
                 }
-                throw new Error(data.error || `HTTP ${response.status}`);
+                
+                // 詳細なエラーメッセージがある場合は、それも含めてエラーを投げる
+                const errorMessage = data.error || `HTTP ${response.status}`;
+                const errorDetails = data.details ? `\n${data.details}` : '';
+                throw new Error(errorMessage + errorDetails);
             }
             
             return data;

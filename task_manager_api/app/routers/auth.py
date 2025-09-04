@@ -59,8 +59,17 @@ def login():
     # ユーザー認証
     user = User.query.filter_by(username=username).first()
     
-    if not user or not user.check_password(password):
-        return jsonify({'error': 'ユーザー名またはパスワードが正しくありません'}), 401
+    if not user:
+        return jsonify({
+            'error': '入力されたユーザー名が見つかりません。', 
+            'details': 'ユーザー名を確認して再度お試しください。'
+        }), 401
+    
+    if not user.check_password(password):
+        return jsonify({
+            'error': 'パスワードが正しくありません。',
+            'details': 'パスワードを確認して再度お試しください。'
+        }), 401
         
     if not user.is_active:
         return jsonify({'error': 'アカウントが無効になっています'}), 401
