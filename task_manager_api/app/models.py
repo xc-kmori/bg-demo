@@ -23,27 +23,21 @@ class User(db.Model):
     categories = db.relationship('Category', backref='user', lazy=True)
 
     def set_password(self, password):
-        """パスワードをハッシュ化して保存"""
-        self.password_hash = generate_password_hash(password)
+        """パスワードをハッシュ化して保存（PBKDF2固定）"""
+        # 一部の環境では scrypt が利用できないため、方式を PBKDF2 に固定
+        self.password_hash = generate_password_hash(
+            password,
+            method='pbkdf2:sha256',
+            salt_length=16
+        )
 
     def check_password(self, password):
         """パスワードをチェック"""
         try:
             return check_password_hash(self.password_hash, password)
-        except (ValueError, AttributeError) as e:
-            # scryptが利用できない場合やその他のエラーの場合
-            # 古いハッシュ形式の場合は再ハッシュ化を試行
-            if 'scrypt' in str(e) or 'scrypt' in self.password_hash:
-                # 一時的にパスワードを再ハッシュ化して比較
-                try:
-                    new_hash = generate_password_hash(password)
-                    if check_password_hash(new_hash, password):
-                        # 新しいハッシュ形式で更新
-                        self.password_hash = new_hash
-                        db.session.commit()
-                        return True
-                except:
-                    pass
+        except (ValueError, AttributeError):
+            # 旧ハッシュ方式（例: scrypt）が使われている環境では検証不可
+            # セキュアに移行するには、パスワード再設定を行う
             return False
 
     def to_dict(self):
