@@ -526,7 +526,7 @@ body {
     align-items: center;
     gap: 0.25rem;
     text-decoration: underline; /* リンク風 */
-    float: right; /* テキストの直下・右寄せ */
+    float: none; /* 左寄せに戻す */
 }
 
 .task-meta {
