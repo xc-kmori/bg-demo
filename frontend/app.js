@@ -62,6 +62,22 @@ const Utils = {
         return this.escapeHTML(text || '').trim();
     },
     
+    // URLを自動リンク化（http/httpsのみ）
+    linkify(escapedText) {
+        if (!escapedText) return '';
+        const urlRegex = /(https?:\/\/[\w\-._~:?#@!$&'()*+,;=%/]+)(?![^<]*?>)/g;
+        return escapedText.replace(urlRegex, (url) => {
+            try {
+                const u = new URL(url);
+                if (u.protocol !== 'http:' && u.protocol !== 'https:') return url;
+            } catch (_) {
+                return url;
+            }
+            const safeUrl = url.replace(/"/g, '&quot;');
+            return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+        });
+    },
+    
     // 日付のみ（期限日用）
     formatDateOnly(dateString) {
         if (!dateString) return 'なし';
@@ -345,7 +361,7 @@ const Dashboard = {
         }
         
         container.innerHTML = tasks.map(task => {
-            const desc = Utils.sanitizeDescription(task.description);
+            const desc = Utils.linkify(Utils.sanitizeDescription(task.description));
             const lines = desc ? desc.split(/\r?\n/) : [];
             const isLong = lines.length > 4 || (desc && desc.length > 160);
             const descHtml = desc ? `
@@ -413,7 +429,7 @@ const Tasks = {
         }
         
         container.innerHTML = AppState.tasks.map(task => {
-            const desc = Utils.sanitizeDescription(task.description);
+            const desc = Utils.linkify(Utils.sanitizeDescription(task.description));
             const lines = desc ? desc.split(/\r?\n/) : [];
             const isLong = lines.length > 4 || (desc && desc.length > 160);
             const descHtml = desc ? `

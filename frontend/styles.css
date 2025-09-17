@@ -499,6 +499,17 @@ body {
     margin-bottom: 1rem;
     line-height: 1.5;
     white-space: pre-wrap; /* 改行を反映 */
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+.task-description a {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.task-description a:hover {
+    color: var(--primary-dark);
 }
 
 /* 説明の折りたたみ表示 */
