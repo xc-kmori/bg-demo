@@ -350,7 +350,7 @@ const Dashboard = {
             const isLong = lines.length > 4 || (desc && desc.length > 160);
             const descHtml = desc ? `
                 <div class="task-description ${isLong ? 'description-collapsed' : ''}" data-task-id="${task.id}">${desc}</div>
-                ${isLong ? `<button class="description-toggle" onclick="toggleDescription(${task.id})">もっと見る</button>` : ''}
+                ${isLong ? `<button class="description-toggle" onclick="toggleDescription(this)">もっと見る</button>` : ''}
             ` : '';
             return `
             <div class="task-card">
@@ -418,7 +418,7 @@ const Tasks = {
             const isLong = lines.length > 4 || (desc && desc.length > 160);
             const descHtml = desc ? `
                 <div class="task-description ${isLong ? 'description-collapsed' : ''}" data-task-id="${task.id}">${desc}</div>
-                ${isLong ? `<button class="description-toggle" onclick="toggleDescription(${task.id})">もっと見る</button>` : ''}
+                ${isLong ? `<button class="description-toggle" onclick="toggleDescription(this)">もっと見る</button>` : ''}
             ` : '';
             return `
             <div class="task-card">
@@ -1008,10 +1008,19 @@ if (window.innerWidth <= 768) {
 }
 
 // === 説明のトグル ===
-function toggleDescription(taskId) {
-    const el = document.querySelector(`.task-description[data-task-id="${taskId}"]`);
+function toggleDescription(btnElOrTaskId) {
+    let el;
+    let btn;
+    if (typeof btnElOrTaskId === 'number') {
+        // 後方互換
+        el = document.querySelector(`.task-description[data-task-id="${btnElOrTaskId}"]`);
+        btn = el ? el.nextElementSibling : null;
+    } else {
+        // ボタン要素から辿る
+        btn = btnElOrTaskId;
+        el = btn ? btn.previousElementSibling : null;
+    }
     if (!el) return;
-    const btn = el.nextElementSibling;
     const expanded = el.classList.contains('description-expanded');
     if (expanded) {
         el.classList.remove('description-expanded');
