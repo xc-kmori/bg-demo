@@ -521,7 +521,7 @@ body {
     cursor: pointer;
     padding: 0;
     font-size: 0.85rem;
-    margin: 0.1rem 0 0.6rem 0; /* 上は最小、下は余白を少し広めに */
+    margin: 0.1rem 0 0.8rem 0; /* 下余白を少しだけ拡大 */
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
