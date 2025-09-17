@@ -507,6 +507,7 @@ body {
     -webkit-line-clamp: 4; /* 4行で折りたたみ */
     -webkit-box-orient: vertical;
     overflow: hidden;
+    margin-bottom: 0.25rem; /* ボタンをやや上に寄せる */
 }
 
 .description-expanded {
@@ -520,6 +521,12 @@ body {
     cursor: pointer;
     padding: 0;
     font-size: 0.85rem;
+    margin: 0.1rem 0 0.35rem 0; /* 上余白を最小化 */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: underline; /* リンク風 */
+    float: right; /* テキストの直下・右寄せ */
 }
 
 .task-meta {
