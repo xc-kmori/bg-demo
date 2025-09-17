@@ -48,6 +48,20 @@ const Utils = {
         });
     },
     
+    // 単純なHTMLエスケープ
+    escapeHTML(text) {
+        if (text == null) return '';
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    },
+    
+    // 説明文の整形（HTMLエスケープ＋前後の空白・改行除去）
+    sanitizeDescription(text) {
+        return this.escapeHTML(text || '').trim();
+    },
+    
     // 日付のみ（期限日用）
     formatDateOnly(dateString) {
         if (!dateString) return 'なし';
@@ -330,7 +344,15 @@ const Dashboard = {
             return;
         }
         
-        container.innerHTML = tasks.map(task => `
+        container.innerHTML = tasks.map(task => {
+            const desc = Utils.sanitizeDescription(task.description);
+            const lines = desc ? desc.split(/\r?\n/) : [];
+            const isLong = lines.length > 4 || (desc && desc.length > 160);
+            const descHtml = desc ? `
+                <div class="task-description ${isLong ? 'description-collapsed' : ''}" data-task-id="${task.id}">${desc}</div>
+                ${isLong ? `<button class="description-toggle" onclick="toggleDescription(${task.id})">もっと見る</button>` : ''}
+            ` : '';
+            return `
             <div class="task-card">
                 <div class="task-header">
                     <div class="task-title">${task.title}</div>
@@ -340,12 +362,7 @@ const Dashboard = {
                         </button>
                     </div>
                 </div>
-                ${task.description ? `
-                    <div class="task-description description-collapsed" data-task-id="${task.id}">
-                        ${task.description}
-                    </div>
-                    <button class="description-toggle" onclick="toggleDescription(${task.id})">もっと見る</button>
-                ` : ''}
+                ${descHtml}
                 <div class="task-meta">
                     <span class="task-badge priority-${task.priority}">
                         ${Utils.getPriorityText(task.priority)}
@@ -357,7 +374,7 @@ const Dashboard = {
                 </div>
                 ${task.due_date ? `<div class="text-small text-muted">期限: ${Utils.formatDateOnly(task.due_date)}</div>` : ''}
             </div>
-        `).join('');
+        `}).join('');
     }
 };
 
@@ -395,7 +412,15 @@ const Tasks = {
             return;
         }
         
-        container.innerHTML = AppState.tasks.map(task => `
+        container.innerHTML = AppState.tasks.map(task => {
+            const desc = Utils.sanitizeDescription(task.description);
+            const lines = desc ? desc.split(/\r?\n/) : [];
+            const isLong = lines.length > 4 || (desc && desc.length > 160);
+            const descHtml = desc ? `
+                <div class="task-description ${isLong ? 'description-collapsed' : ''}" data-task-id="${task.id}">${desc}</div>
+                ${isLong ? `<button class="description-toggle" onclick="toggleDescription(${task.id})">もっと見る</button>` : ''}
+            ` : '';
+            return `
             <div class="task-card">
                 <div class="task-header">
                     <div class="task-title">${task.title}</div>
@@ -408,12 +433,7 @@ const Tasks = {
                         </button>
                     </div>
                 </div>
-                ${task.description ? `
-                    <div class="task-description description-collapsed" data-task-id="${task.id}">
-                        ${task.description}
-                    </div>
-                    <button class="description-toggle" onclick="toggleDescription(${task.id})">もっと見る</button>
-                ` : ''}
+                ${descHtml}
                 <div class="task-meta">
                     <span class="task-badge priority-${task.priority}">
                         ${Utils.getPriorityText(task.priority)}
@@ -429,7 +449,7 @@ const Tasks = {
                     ${task.updated_at !== task.created_at ? ` | 更新: ${Utils.formatDate(task.updated_at)}` : ''}
                 </div>
             </div>
-        `).join('');
+        `}).join('');
     },
     
     async createTask(taskData) {
