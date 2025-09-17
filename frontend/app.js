@@ -340,7 +340,12 @@ const Dashboard = {
                         </button>
                     </div>
                 </div>
-                ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
+                ${task.description ? `
+                    <div class="task-description description-collapsed" data-task-id="${task.id}">
+                        ${task.description}
+                    </div>
+                    <button class="description-toggle" onclick="toggleDescription(${task.id})">もっと見る</button>
+                ` : ''}
                 <div class="task-meta">
                     <span class="task-badge priority-${task.priority}">
                         ${Utils.getPriorityText(task.priority)}
@@ -403,7 +408,12 @@ const Tasks = {
                         </button>
                     </div>
                 </div>
-                ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
+                ${task.description ? `
+                    <div class="task-description description-collapsed" data-task-id="${task.id}">
+                        ${task.description}
+                    </div>
+                    <button class="description-toggle" onclick="toggleDescription(${task.id})">もっと見る</button>
+                ` : ''}
                 <div class="task-meta">
                     <span class="task-badge priority-${task.priority}">
                         ${Utils.getPriorityText(task.priority)}
@@ -975,4 +985,21 @@ function toggleSidebar() {
 // モバイル用のハンバーガーメニュー（必要に応じて追加）
 if (window.innerWidth <= 768) {
     // モバイル用の追加機能をここに実装
+}
+
+// === 説明のトグル ===
+function toggleDescription(taskId) {
+    const el = document.querySelector(`.task-description[data-task-id="${taskId}"]`);
+    if (!el) return;
+    const btn = el.nextElementSibling;
+    const expanded = el.classList.contains('description-expanded');
+    if (expanded) {
+        el.classList.remove('description-expanded');
+        el.classList.add('description-collapsed');
+        if (btn) btn.textContent = 'もっと見る';
+    } else {
+        el.classList.remove('description-collapsed');
+        el.classList.add('description-expanded');
+        if (btn) btn.textContent = '閉じる';
+    }
 }
