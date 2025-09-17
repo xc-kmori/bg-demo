@@ -48,15 +48,25 @@ const Utils = {
         });
     },
     
+    // 日付のみ（期限日用）
+    formatDateOnly(dateString) {
+        if (!dateString) return 'なし';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ja-JP', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    },
+    
     formatDateForInput(dateString) {
         if (!dateString) return '';
+        // 期限日は日付のみ扱う
         const date = new Date(dateString);
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        return `${year}-${month}-${day}T${hours}:${minutes}`;
+        return `${year}-${month}-${day}`;
     },
     
     getPriorityText(priority) {
@@ -340,7 +350,7 @@ const Dashboard = {
                     </span>
                     ${task.category_name ? `<span class="task-badge">${task.category_name}</span>` : ''}
                 </div>
-                ${task.due_date ? `<div class="text-small text-muted">期限: ${Utils.formatDate(task.due_date)}</div>` : ''}
+                ${task.due_date ? `<div class="text-small text-muted">期限: ${Utils.formatDateOnly(task.due_date)}</div>` : ''}
             </div>
         `).join('');
     }
@@ -403,7 +413,7 @@ const Tasks = {
                     </span>
                     ${task.category_name ? `<span class="task-badge" style="background-color: ${task.category_color || '#007bff'}20; color: ${task.category_color || '#007bff'}">${task.category_name}</span>` : ''}
                 </div>
-                ${task.due_date ? `<div class="text-small text-muted">期限: ${Utils.formatDate(task.due_date)}</div>` : ''}
+                ${task.due_date ? `<div class="text-small text-muted">期限: ${Utils.formatDateOnly(task.due_date)}</div>` : ''}
                 <div class="text-xs text-muted mt-1">
                     作成: ${Utils.formatDate(task.created_at)}
                     ${task.updated_at !== task.created_at ? ` | 更新: ${Utils.formatDate(task.updated_at)}` : ''}

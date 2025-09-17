@@ -102,7 +102,8 @@ class Task(db.Model):
             'description': self.description,
             'status': self.status,
             'priority': self.priority,
-            'due_date': self.due_date.isoformat() if self.due_date else None,
+            # 期限日は日付のみ返す（YYYY-MM-DD）
+            'due_date': self.due_date.date().isoformat() if self.due_date else None,
             'completed_at': self.completed_at.isoformat() if self.completed_at else None,
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat(),

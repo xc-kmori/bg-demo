@@ -76,10 +76,18 @@ def create_task():
         category_id=category_id
     )
     
-    # 期限日の設定
+    # 期限日の設定（YYYY-MM-DD 形式を優先、なければISO8601を許可）
     due_date_str = data.get('due_date')
     if due_date_str:
-        task.due_date = datetime.fromisoformat(due_date_str.replace('Z', '+00:00'))
+        try:
+            if isinstance(due_date_str, str) and len(due_date_str) == 10:
+                # 日付のみ
+                task.due_date = datetime.strptime(due_date_str, '%Y-%m-%d')
+            else:
+                # 互換用: 旧クライアントからの日時も受容
+                task.due_date = datetime.fromisoformat(due_date_str.replace('Z', '+00:00'))
+        except ValueError:
+            return jsonify({'error': '期限日の形式が正しくありません（YYYY-MM-DD）'}), 400
     
     db.session.add(task)
     db.session.commit()
@@ -142,13 +150,17 @@ def update_task(task_id):
                     return jsonify({'error': '指定されたカテゴリが見つかりません'}), 404
             task.category_id = data['category_id']
         
-        # 期限日の更新
+        # 期限日の更新（YYYY-MM-DD 形式を優先、なければISO8601を許可）
         if 'due_date' in data:
-            if data['due_date']:
+            due_date_str = data['due_date']
+            if due_date_str:
                 try:
-                    task.due_date = datetime.fromisoformat(data['due_date'].replace('Z', '+00:00'))
+                    if isinstance(due_date_str, str) and len(due_date_str) == 10:
+                        task.due_date = datetime.strptime(due_date_str, '%Y-%m-%d')
+                    else:
+                        task.due_date = datetime.fromisoformat(due_date_str.replace('Z', '+00:00'))
                 except ValueError:
-                    return jsonify({'error': '期限日の形式が正しくありません'}), 400
+                    return jsonify({'error': '期限日の形式が正しくありません（YYYY-MM-DD）'}), 400
             else:
                 task.due_date = None
                 

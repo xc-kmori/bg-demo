@@ -47,16 +47,16 @@ class TaskValidator:
         if len(description) > 1000:
             errors.append('タスクの説明は1000文字以内で入力してください')
         
-        # 期限日検証
+        # 期限日検証（YYYY-MM-DD 形式）
         due_date = data.get('due_date')
         if due_date:
             try:
-                parsed_date = datetime.fromisoformat(due_date.replace('Z', '+00:00'))
-                # 過去の日付チェック
-                if parsed_date < datetime.now():
-                    errors.append('期限日は現在より未来の日時を設定してください')
+                parsed_date = datetime.strptime(due_date, '%Y-%m-%d') if len(due_date) == 10 else datetime.fromisoformat(due_date.replace('Z', '+00:00'))
+                # 過去日チェック: 日単位のため時分は考慮しない
+                if parsed_date.date() < datetime.now().date():
+                    errors.append('期限日は本日以降の日付を設定してください')
             except ValueError:
-                errors.append('期限日の形式が正しくありません（ISO8601形式で入力してください）')
+                errors.append('期限日の形式が正しくありません（YYYY-MM-DD）')
         
         if errors:
             raise ValidationError('; '.join(errors))
